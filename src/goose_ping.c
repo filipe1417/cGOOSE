@@ -247,11 +247,22 @@ typedef struct _recv_args_t
 int main(int argc, char *argv[]) 
 {
   /* Check paramaters */
-  if (argc != 2) 
+  if (argc > 3) 
   {
     print_usage();
     return -1;
   }
+
+  int cont = 0;
+  char *macstring = strtok(argv[2], ":");
+  char *array[6];
+  
+  while (macstring != NULL) {
+	array[cont++] = macstring;
+	macstring = strtok (NULL, ":");
+  }
+
+  
 
   /* Declare local variables */
   pthread_t recv_thread;                /* Thread struct to receiving thread */
@@ -262,7 +273,7 @@ int main(int argc, char *argv[])
   int i = 0;          /* Loop index and temporary variable for return values */
   recv_args_t args = {0};    /* Arguments struct used to pass data to thread */
   goose_frame_t goose_frame;      /* The GOOSE frame to write to the network */
-  uint8_t dmac[6] = { 0x8, 0x93, 0x01, 0x3e, 0x10, 0x73 };       /* Dest MAC */
+  uint8_t dmac[6] = { strtol(array[0], NULL, 16), strtol(array[1], NULL, 16), strtol(array[2], NULL, 16), strtol(array[3], NULL, 16),strtol(array[4], NULL, 16),strtol(array[5], NULL, 16)  };       /* Dest MAC */
   uint8_t smac[6] = { 0x8, 0x93, 0x01, 0x3e, 0x10, 0x73 };        /* Src MAC */
   uint8_t gocbref[] = "GE_N60CTRL/LLN0$GO$gcb03"; /* Control block reference */
   uint8_t datSet[] = "GE_N60CTRL/LLN0$GOOSE3";                   /* Data set */
